@@ -1,4 +1,3 @@
-// src/app/auth/page.js
 import { getProviders, signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button"; // Custom Button component if you have it
 
