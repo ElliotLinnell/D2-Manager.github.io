@@ -14,7 +14,6 @@ export default function Home() {
 
   useEffect(() => {
     if (status === "loading") return; // Do nothing while loading
-    if (!session) router.push("/auth/signin"); // Redirect if not authenticated
   }, [session, status, router]);
 
   const fetchPlayerData = async () => {
