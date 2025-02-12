@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
 
-export default function Destiny2App() {
+export default function Home() {
   const { data: session } = useSession();
   const [player, setPlayer] = useState("");
   const [data, setData] = useState(null);
@@ -40,15 +40,19 @@ export default function Destiny2App() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Destiny 2 Player Search</h1>
+    <div className="p-6 max-w-4xl mx-auto text-center">
+      <h1 className="text-3xl font-bold mb-6">Destiny 2 Loadout Manager</h1>
       {!session ? (
-        <Button onClick={() => signIn()}>Login</Button>
+        <div>
+          <p className="mb-4">Sign in to manage your Destiny 2 loadouts.</p>
+          <Button onClick={() => signIn()}>Login</Button>
+        </div>
       ) : (
         <div>
-          <Button onClick={() => signOut()}>Logout</Button>
-          <div className="flex gap-2 mb-4">
+          <Button className="mb-4" onClick={() => signOut()}>Logout</Button>
+          <div className="flex flex-col md:flex-row gap-2 mb-4 items-center">
             <Input
+              className="w-full md:w-auto"
               placeholder="Enter player name"
               value={player}
               onChange={(e) => setPlayer(e.target.value)}
@@ -56,16 +60,18 @@ export default function Destiny2App() {
             <Button onClick={fetchPlayerData}>Search</Button>
           </div>
           {data && (
-            <Card>
+            <Card className="mt-4 text-left">
               <CardContent>
                 <h2 className="text-xl font-semibold">{data.playerName}</h2>
-                <p>Light Level: {data.lightLevel}</p>
-                <p>Clan: {data.clanName}</p>
+                <p>Light Level: <span className="font-medium">{data.lightLevel}</span></p>
+                <p>Clan: <span className="font-medium">{data.clanName}</span></p>
                 <h3 className="mt-4 font-semibold">Loadouts</h3>
-                {loadouts.map((loadout, index) => (
-                  <p key={index}>{loadout.name}</p>
-                ))}
-                <Button onClick={() => updateLoadout({ name: "New Loadout" })}>
+                <ul className="list-disc pl-5">
+                  {loadouts.map((loadout, index) => (
+                    <li key={index}>{loadout.name}</li>
+                  ))}
+                </ul>
+                <Button className="mt-4" onClick={() => updateLoadout({ name: "New Loadout" })}>
                   Update Loadout
                 </Button>
               </CardContent>
