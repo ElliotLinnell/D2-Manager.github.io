@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 export default function Home() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [player, setPlayer] = useState("");
   const [data, setData] = useState(null);
   const [loadouts, setLoadouts] = useState([]);
+
+  useEffect(() => {
+    if (status === "loading") return; // Do nothing while loading
+    if (!session) router.push("/auth/signin"); // Redirect if not authenticated
+  }, [session, status, router]);
 
   const fetchPlayerData = async () => {
     if (!player) return;
@@ -38,6 +45,10 @@ export default function Home() {
       console.error("Error updating loadout:", error);
     }
   };
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="p-6 max-w-4xl mx-auto text-center">
